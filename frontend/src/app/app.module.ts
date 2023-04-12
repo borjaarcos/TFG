@@ -11,11 +11,18 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
+import {HttpClientModule} from "@angular/common/http";
+import { ProjectsComponent } from './components/projects/projects.component';
+import {MatIconModule} from "@angular/material/icon";
+import { TasklistGanttComponent } from './components/tasklist-gantt/tasklist-gantt.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ProjectsComponent,
+    TasklistGanttComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +35,9 @@ import {MatCardModule} from "@angular/material/card";
     MatSliderModule,
     MatFormFieldModule,
     MatCardModule,
+    MatInputModule,
+    HttpClientModule,
+    MatIconModule
 
 
   ],

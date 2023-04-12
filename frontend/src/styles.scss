@@ -4,8 +4,11 @@
 
   font-family: 'Righteous', cursive;
   display: flex;
-  margin: 5% 0 0 2%;
+  padding: 5% 0 0 4%;
+  font-size: xxx-large;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body{
+  background-color:#0A0043 !important;
+}
