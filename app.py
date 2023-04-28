@@ -84,7 +84,8 @@ def get_tasklist():
             responseTasks = session.get(url)
             todo = []
             for task in responseTasks.json()['todo-items']:
-                todo.append(task)
+                if 'parent-task' not in task:
+                    todo.append(task)
             tasklist['tasks'] = todo
             data.append(tasklist)
             i = i+1

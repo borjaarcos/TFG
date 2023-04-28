@@ -1,14 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 .title{
 
   font-family: 'Righteous', cursive;
   display: flex;
   padding: 5% 0 0 4%;
   font-size: xxx-large;
+
 }
+.title:hover{
+  cursor: pointer;
 
-
+}
+.user{
+  font-family: 'Righteous', cursive;
+  font-size: x-large;
+  margin-top: 2%;
+  display: flex;
+  margin-right: 5%;
+}
+.user button{
+  margin-left: 5%;
+  color:darkred;
+  margin-top: 2%;
+}
+.user mat-icon{
+   transform: scale(2);
+   padding-right: 40%;
+}
+.nav{
+  margin-top: 2%;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+}
+.logout{
+  text-decoration: underline;
+  margin-left: 15%;
+  border: none;
+  background-color: #f1f1f1;
+  all: unset;
+  margin-bottom: 17%;
+}
+.logout:hover{
+  cursor: pointer;
+}
 body{
   background-color:#0A0043 !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

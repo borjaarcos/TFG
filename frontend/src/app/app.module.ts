@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { AuthenticationService } from './services/authentication.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -15,14 +15,23 @@ import {MatInputModule} from "@angular/material/input";
 import {HttpClientModule} from "@angular/common/http";
 import { ProjectsComponent } from './components/projects/projects.component';
 import {MatIconModule} from "@angular/material/icon";
-import { TasklistGanttComponent } from './components/tasklist-gantt/tasklist-gantt.component';
+import {TasklistGanttComponent} from './components/tasklist-gantt/tasklist-gantt.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatListModule} from "@angular/material/list";
+import {DateAdapter, MAT_DATE_FORMATS, MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
+import { EditTasksDialogComponent } from './components/edit-tasks-dialog/edit-tasks-dialog.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProjectsComponent,
-    TasklistGanttComponent
+    TasklistGanttComponent,
+    EditTasksDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -37,11 +46,17 @@ import { TasklistGanttComponent } from './components/tasklist-gantt/tasklist-gan
     MatCardModule,
     MatInputModule,
     HttpClientModule,
-    MatIconModule
-
-
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatMomentDateModule
   ],
-  providers: [],
+  providers: [{provide: DateAdapter, useClass: MomentDateAdapter},
+  { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
