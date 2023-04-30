@@ -20,7 +20,7 @@ redis_db = 0
 
 
 @app.route('/<string:cookie>', methods=['GET'])
-def get_projects2(cookie):
+def successful_login(cookie):
     session = requests.Session()
     my_cookie_jar = requests.cookies.RequestsCookieJar()
     my_cookie_jar.set('tw-auth', cookie)
@@ -56,7 +56,7 @@ def get_twCookie():
         print("La solicitud fue exitosa.")
     else:
         print("La solicitud falló. Código de estado:", response.status_code)
-
+    #Creating a cookiejar useful when doing a response
     cookiejar = response.cookies
     cookies_dict = cookiejar.get_dict()
     mi_respuesta = make_response(jsonify(cookies_dict))
@@ -96,6 +96,67 @@ def get_tasklist():
         return my_response
     else:
         print("La solicitud falló.")
+def dataMaker(mode, name, date):
+    if(mode == 1):
+    #Cuidado con el nombre de los atributos, sino no va
+        data = {
+            "todo-list": {
+                "name": name
+            }
+        }
+    elif(mode == 2):
+        data = {
+            "todo-item": {
+                "content": name
+            }
+        }
+    else:
+        data = {
+            "todo-item": {
+                "content": name,
+                "start-date": date
+            }
+        }
+
+    return data
+
+
+def urlMaker(taskid, mode):
+
+
+    if (mode == 1):
+        # Cuidado con el nombre de los atributos, sino no va
+        url = 'https://beedata.teamwork.com/tasklists/' + taskid + '.json'
+    else:
+        url = 'https://beedata.teamwork.com/tasks/' + taskid + '.json'
+    return url
+
+
+@app.route('/editTask', methods=['POST'])
+def editTasklist():
+    req = request.get_json()
+    session = requests.Session()
+    headers = {
+        "Content-Type": "application/json"
+    }
+    cookies = {'tw-auth': req['cookie']}
+
+    data = dataMaker(req['mode'], req['name'], req['date'])
+
+    url = urlMaker(str(req['taskid']), req['mode'])
+
+    # Realizar la petición PUT a la API de Teamwork con los datos y headers definidos previamente
+    response = session.put(url, headers=headers, cookies=cookies, json=data)
+    # Comprobar que la petición ha sido exitosa (código 200)
+    if response.status_code == 200:
+        print('Tasklist editada correctamente.')
+        return "200"
+    else:
+        print('Error al editar tasklist:', response.content)
+        return "error"
+
+
+
 if __name__ == '__main__':
 
     app.run(port=5000)
