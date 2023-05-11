@@ -29,16 +29,16 @@ def successful_login(cookie):
     url = "https://beedata.teamwork.com/projects.json"
     response = session.get(url)
 
-    name = response.json()['projects'][0]
-    data = {}
-    data2 = []
-    data['id'] = name['id']
-    data['name'] = name['name']
-    data2.append(data)
+    res = []
+    for project in response.json()['projects']:
+        data = {}
+        data['id'] = project['id']
+        data['name'] = project['name']
+        res.append(data)
     # Verificar si la solicitud fue exitosa
     if response.status_code == 200:
         print("La solicitud fue exitosa.")
-        my_response = make_response(jsonify(data2))
+        my_response = make_response(jsonify(res))
         my_response.headers['Access-Control-Allow-Origin'] = '*'
         my_response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     else:
@@ -77,6 +77,7 @@ def get_tasklist():
     responseTasklists = session.get(url)
     if responseTasklists.status_code == 200:
         data = []
+        subtasks = []
         for tasklist in responseTasklists.json()['tasklists']:
             id = tasklist['id']
             i = 0
@@ -86,18 +87,22 @@ def get_tasklist():
             for task in responseTasks.json()['todo-items']:
                 if 'parent-task' not in task:
                     todo.append(task)
+                elif 'content' in task:
+                    subtasks.append(task)
             tasklist['tasks'] = todo
             data.append(tasklist)
             i = i+1
-
-        my_response = make_response(jsonify(data))
+        res = {}
+        res['tasklists'] = data
+        res['subtasks'] = subtasks
+        my_response = make_response(jsonify(res))
         my_response.headers['Access-Control-Allow-Origin'] = '*'
         my_response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         return my_response
     else:
         print("La solicitud falló.")
-def dataMaker(mode, name, date):
-    if(mode == 1):
+def dataMaker(mode, name, date, id):
+    if(mode == 1 or mode == 4):
     #Cuidado con el nombre de los atributos, sino no va
         data = {
             "todo-list": {
@@ -110,28 +115,64 @@ def dataMaker(mode, name, date):
                 "content": name
             }
         }
-    else:
+    elif(mode == 3):
         data = {
             "todo-item": {
                 "content": name,
                 "start-date": date
             }
         }
-
+    elif (mode == 5):
+        data = {
+            "project": {
+                "name": name,
+            }
+        }
+    elif (mode == 6):
+        data = {
+            "task": {
+                "content": name,
+                "due-date": date
+            }
+        }
+    elif (mode == 7):
+        data = {
+            "todo-item": {
+                "content": name,
+                "due-date": date
+            }
+        }
     return data
 
 
 def urlMaker(taskid, mode):
-
-
     if (mode == 1):
-        # Cuidado con el nombre de los atributos, sino no va
+        # Edit tasklist
         url = 'https://beedata.teamwork.com/tasklists/' + taskid + '.json'
-    else:
+    elif (mode <= 3):
+        # Edit tasks
+        url = 'https://beedata.teamwork.com/tasks/' + taskid + '.json'
+    elif (mode == 4):
+        # Add tasklist to project
+        url = 'https://beedata.teamwork.com/projects/' + taskid + '/tasklists.json'
+    elif (mode == 5):
+        # Edit project name
+        url = 'https://beedata.teamwork.com/projects/' + taskid + '.json'
+    elif (mode == 6):
+        # Add task to tasklist
+        url = 'https://beedata.teamwork.com/tasklists/' + taskid + '/tasks.json'
+    elif (mode == 7):
+        # Add subtask to task
         url = 'https://beedata.teamwork.com/tasks/' + taskid + '.json'
     return url
 
-
+#Mode 1: edit tasklist name
+#Mode 2: edit tasks name
+#Mode 3: edit subtasks name and date
+#Mode 4: create tasklist in project
+#Mode 5: edit project name
+#Mode 6: create task in tasklist
+#Mode 7: create subtask in task
 @app.route('/editTask', methods=['POST'])
 def editTasklist():
     req = request.get_json()
@@ -141,12 +182,15 @@ def editTasklist():
     }
     cookies = {'tw-auth': req['cookie']}
 
-    data = dataMaker(req['mode'], req['name'], req['date'])
+    data = dataMaker(req['mode'], req['name'], req['date'], str(req['taskid']))
 
     url = urlMaker(str(req['taskid']), req['mode'])
 
     # Realizar la petición PUT a la API de Teamwork con los datos y headers definidos previamente
-    response = session.put(url, headers=headers, cookies=cookies, json=data)
+    if(req['mode'] == 4 or req['mode'] > 5):
+        response = session.post(url, headers=headers, cookies=cookies, json=data)
+    else:
+        response = session.put(url, headers=headers, cookies=cookies, json=data)
     # Comprobar que la petición ha sido exitosa (código 200)
     if response.status_code == 200:
         print('Tasklist editada correctamente.')
