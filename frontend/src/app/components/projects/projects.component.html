@@ -1,0 +1,20 @@
+
+
+<div class="nav">
+  <div class="title" [routerLink]="['/']">teamwork <p style="color:#ff22b1;">.</p> Gantt</div>
+  <div class="user"><div class="user"><mat-icon> person_pin</mat-icon><p>user</p></div><button (click)="logout()" class="logout">Logout</button></div>
+
+</div>
+<div class="bodyContainer">
+  <div class="searcherContainer">
+    <mat-icon> search</mat-icon>
+    <input type="text" [(ngModel)]="searchTerm" (input)="filterList()">
+  </div>
+  <div class="projectsContainer"
+  >
+    <div class="project"*ngFor="let project of projects" [routerLink]="['/tasklist', project.id]">
+      <p  >{{project.name}}</p>
+    </div>
+  </div>
+</div>
+

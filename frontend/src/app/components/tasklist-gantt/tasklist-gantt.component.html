@@ -1,0 +1,88 @@
+<mat-drawer-container id="appear" class="example-container" hasBackdrop="true">
+    <mat-drawer #drawer mode="over">
+      <div
+    *ngFor="let tasklist of tasklists">
+
+      <input type="checkbox" [(ngModel)]="taskVisible[tasklist.name]">
+        <button mat-raised-button (click)="abrirDialogo(tasklist.id,1, 'Editar '+tasklist.name, tasklist.name)" >
+          {{tasklist.name}}
+        </button>
+        <button mat-icon-button color="basic" (click)="abrirDialogo(tasklist.id,6, 'Afegir tasca a  '+tasklist.name, tasklist.name)"  aria-label="add task to tasklist">
+         <mat-icon>add_circle</mat-icon>
+        </button>
+      <div
+      *ngFor="let task of tasklist.tasks">
+        <input type="checkbox" [(ngModel)]="taskVisible[task.content]">
+          <button mat-raised-button (click)="abrirDialogo(task.id,2,'Editar '+task.content, task.content)" >
+            {{task.content}}
+          </button>
+        <button mat-icon-button color="primary" (click)="abrirDialogo(task.id,7, 'Afegir subtasca a  '+tasklist.name, '')" aria-label="add task to tasklist">
+         <mat-icon>add_circle</mat-icon>
+        </button>
+        <div
+          *ngFor="let pred of task.predecessors">
+          <button mat-raised-button (click)="abrirDialogo(pred.id,3, 'Editar '+pred.name, pred.name)" >
+            <input type="checkbox" [(ngModel)]="taskVisible[pred.name]">{{pred.name}}
+          </button>
+        </div>
+      </div>
+
+    </div>
+    </mat-drawer>
+    <mat-drawer-content>
+      <div class="nav">
+        <div class="title" [routerLink]="['/']">teamwork <p style="color:#ff22b1;">.</p> Gantt</div>
+        <div class="user"><div class="user"><mat-icon> person_pin</mat-icon><p>user</p></div><button (click)="logout()" class="logout">Logout</button></div>
+
+      </div>
+      <div class="ganttHeadContainer">
+        <div  class="projectTitle">
+          <button class="projectTitle" [matMenuTriggerFor]="menu">{{tasklists[0].projectName}}</button>
+          <mat-menu #menu="matMenu">
+            <button (click)="abrirDialogo(tasklists[0].projectId,4, 'Crear llista de tasques', '')" mat-menu-item>Crear llista de tasques</button>
+            <button (click)="abrirDialogo(tasklists[0].projectId,5, 'Editar '+ tasklists[0].projectName,tasklists[0].projectName)" mat-menu-item>Editar projecte</button>
+          </mat-menu>
+        </div>
+        <button class="botonDrawer" mat-raised-button (click)="drawer.toggle()"><mat-icon>filter_list</mat-icon></button>
+
+      </div>
+
+      <div
+        class="ganttContainer">
+        <table>
+        <thead>
+          <tr>
+            <th>Tarea</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miercoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasklists">
+
+            <td >
+              <div class="task-marker" [ngStyle]="{ 'width': '10%' }"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        *ngFor="let tasklist of tasklists">
+
+          <p *ngIf="taskVisible[tasklist.name]">{{tasklist.name}} </p>
+          <div
+          *ngFor="let task of tasklist.tasks">
+            <p *ngIf="taskVisible[task.content]">{{task.content}}</p>
+            <div
+              *ngFor="let pred of task.predecessors">
+              <p *ngIf="taskVisible[pred.name]">{{pred.name}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,18 @@
+<div class="loginBackground">
+  <div class="title">teamwork <p style="color:#ff22b1;">.</p> Gantt</div>
+
+
+  <form class="example-form">
+    <h3>Login</h3>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>User Name</mat-label>
+      <input matInput id="username" placeholder="pat@example.com" [formControl]="email" required
+      [(ngModel)] ="username">
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput id="password" placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]= "password">
+    </mat-form-field>
+    <button mat-raised-button style="background-color:#2C97FB; color:white"  (click)="formSubmit()">Submit</button>
+  </form>
+</div>

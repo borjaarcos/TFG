@@ -1,0 +1,50 @@
+.title{
+  padding-top: 2% !important;
+}
+.projectTitle{
+  font-size: x-large;
+  margin: 2.5% 1% 2% 2%;
+  color:white;
+  font-family: 'Righteous', cursive;
+  width: 2%;
+  background-color: #0A0043;
+  border: none;
+}
+.ganttHeadContainer{
+  display: flex;
+}
+.botonDrawer{
+  margin-top: 1.7rem;
+  margin-left: 2rem;
+}
+.ganttContainer{
+  background-color: #FFFFFF;
+  min-height: 40rem;
+  max-height: 300em;
+  margin: 1% 1% 1% 1%;
+  border-radius: 5px;
+}
+mat-raised-button{
+  padding-top: 10%;
+}
+
+.example-container {
+  height: 100%;
+  width: 100%;
+}
+
+mat-drawer {
+  width: 200px;
+}
+
+mat-drawer-content {
+  background-color:#0A0043 !important;
+}
+
+.draggable {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  cursor: move;
+}
