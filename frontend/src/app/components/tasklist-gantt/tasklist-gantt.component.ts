@@ -4,6 +4,7 @@ import {ProjectDataService} from "../../services/project-data.service";
 import {MatDialog} from '@angular/material/dialog';
 import {Articulo, EditTasksDialogComponent} from "../edit-tasks-dialog/edit-tasks-dialog.component";
 import { weeklyCalendar } from './calendarFunct';
+import * as moment from "moment";
 interface MyDictionary {
   [key: string]: boolean;
 }
@@ -20,6 +21,11 @@ export class TasklistGanttComponent {
   // Dict to filter tasks
   taskVisible: MyDictionary = {};
   subTasks: any;
+  weekCalendar: any;
+  reloadList: boolean = true;
+  currentMonth: number = 0;
+  today = new Date();
+  currentYear: number=this.today.getFullYear();
   constructor(
         private _router: Router,
         private aRouter: ActivatedRoute,
@@ -39,10 +45,6 @@ export class TasklistGanttComponent {
     console.log(this.tasklists)
     console.log(this.subTasks)
     console.log("endingjjfds")
-
-  }
-  //After getting task proceed to fill visible variable to filter tasks
-  ngAfterViewInit() {
     for(let tasklist in this.tasklists){
       // @ts-ignore
       // Using tasklist as key because value equals to the ordinal number of the task
@@ -55,12 +57,11 @@ export class TasklistGanttComponent {
         }
       }
     }
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth() + 1;
+
     console.log(this.subTasks);
     console.log(this.tasklists);
-    weeklyCalendar(currentMonth, currentYear, this.subTasks)
+    this.weekCalendar = weeklyCalendar(this.subTasks, this.today)
+    console.log(this.weekCalendar)
   }
 
   //Deleting tw-auth cookie
@@ -89,6 +90,17 @@ export class TasklistGanttComponent {
     taskEditionDialog.afterClosed().subscribe((result) => {
       this.updateTask(id, result.name, mode, result.date);
     });
+  }
+
+  changeDate(number: number) {
+    number = 7*(number)
+    this.today.setDate(this.today.getDate() + number);
+    this.currentYear=this.today.getFullYear();
+    this.reloadList = false;
+    this.weekCalendar = weeklyCalendar(this.subTasks, this.today)
+    this.reloadList = true;
+
+    console.log(this.weekCalendar)
   }
 }
 
