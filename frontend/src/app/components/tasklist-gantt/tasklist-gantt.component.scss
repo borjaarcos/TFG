@@ -30,7 +30,40 @@
   margin: 0% 0% 0% 0%;
   border-radius: 5px;
   width: 100%;
+   display: flex;
+  justify-content: center;
 }
+
+
+
+
+
+.custom-table {
+  width: 100%;
+
+  border: 1px solid black;
+}
+.custom-table th:first-child,
+.custom-table td:first-child {
+  width: 5%;padding: 0;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 0!important;
+  border: solid black 1px;
+}
+.custom-table th:not(:first-child),
+.custom-table td:not(:first-child) {
+  width: calc((100% - 5%) /  7);
+}
+.tarea{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+
 mat-raised-button{
   padding-top: 10%;
 }

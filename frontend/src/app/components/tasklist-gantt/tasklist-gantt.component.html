@@ -64,12 +64,12 @@
         </button>
         <div
           class="ganttContainer">
-
+<!--
           <div class = "head" *ngIf="reloadList">
 
             <div  class="column" *ngFor="let week of weekCalendar['weekPlan']">
               <p class="week">{{week.week}}</p>
-              <mat-list>
+               <mat-list>
                 <mat-divider></mat-divider>
               <div *ngFor="let task of week.tasks" class="subtasks">
 
@@ -77,7 +77,31 @@
               </div>
                 </mat-list>
             </div>
+
           </div>
+          -->
+          <table class="custom-table">
+  <thead>
+    <tr *ngIf="reloadList">
+      <th></th> <!-- Celda vacía en la esquina superior izquierda -->
+      <th *ngFor="let week of weekCalendar['weekPlan']" >{{week.week}}</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="clients" *ngFor="let tasklist of weekCalendar['clients']">
+        <th>{{tasklist}}</th>
+        <td *ngFor="let week of weekCalendar['weekPlan']">
+          <div *ngFor="let task of week['tasks']">
+          <p *ngIf="task['todo-list-name'] == tasklist">{{task.content}}</p>
+            </div>
+        </td>
+    </tr>
+<ng-template #emptyState>
+  Valor vacío
+</ng-template>
+  </tbody>
+</table>
         </div>
         <button mat-mini-fab class ="minifab" color="primary" (click)="changeDate(1)">
           <mat-icon>keyboard_arrow_right</mat-icon>

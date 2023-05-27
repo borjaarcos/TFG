@@ -21,6 +21,7 @@ function getFirstMondayOfMonth(month: number, year: number) {
 
 export class weekCalendar{
   weekPlan: Week[] = []
+  clients: string[] =[]
 }
 class Week {
   week: string | undefined;
@@ -62,9 +63,13 @@ export function weeklyCalendar(subtasks: any, today: Date) {
       let duedateToCheckM:Date =new Date(duefechaFormateada);
       if ((dateBegin.getTime() <= dateToCheckM.getTime() && dateEnd.getTime() >= dateToCheckM.getTime())) {
         week['tasks']?.push(subtasks[task])
+        if(!weekCal['clients'].includes(subtasks[task]['todo-list-name']))
+          weekCal['clients'].push(subtasks[task]['todo-list-name']);
       }
       else if((dateBegin.getTime() <= duedateToCheckM.getTime() && dateBegin.getTime() >= dateToCheckM.getTime())) {
-          week['tasks']?.push(subtasks[task])
+        week['tasks']?.push(subtasks[task])
+        if(!weekCal['clients'].includes(subtasks[task]['todo-list-name']))
+          weekCal['clients'].push(subtasks[task]['todo-list-name']);
       }
     }
     dayOfWeek.add(1, 'days');
@@ -73,4 +78,3 @@ export function weeklyCalendar(subtasks: any, today: Date) {
   }
   return(weekCal)
 }
-

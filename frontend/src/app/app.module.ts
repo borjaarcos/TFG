@@ -25,6 +25,7 @@ import { EditTasksDialogComponent } from './components/edit-tasks-dialog/edit-ta
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatMenuModule} from "@angular/material/menu";
+import { CodidgoArrastrarComponent } from './components/codidgo-arrastrar/codidgo-arrastrar.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {MatMenuModule} from "@angular/material/menu";
     LoginComponent,
     ProjectsComponent,
     TasklistGanttComponent,
-    EditTasksDialogComponent
+    EditTasksDialogComponent,
+    CodidgoArrastrarComponent
   ],
     imports: [
         BrowserModule,
