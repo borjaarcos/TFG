@@ -1,18 +1,41 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 <div class="matClass" mat-dialog-content>
-  <mat-form-field appearance="fill">
-    <mat-label>Nom</mat-label>
-    <input matInput [(ngModel)]="data.name">
+  <div>
+    <mat-form-field appearance="fill" style="width: 49%; margin-right: 5px">
+      <mat-label>Nom</mat-label>
+      <input matInput [(ngModel)]="data.name">
+    </mat-form-field>
+   <mat-form-field style="width: 49%" *ngIf="data.mode==3 || data.mode==6 || data.mode==7">
+      <mat-label>Tag</mat-label>
+      <mat-select name="tag" [(ngModel)]="data.tag">
+        <ng-container *ngIf="tags">
+          <mat-option *ngFor="let tag of tags['tags']" [value]="tag.name">
+            {{tag.name}}
+          </mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==6 || data.mode==7" style="margin-right: 5px">
+        <mat-label>Data inici</mat-label>
+        <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [(ngModel)]="data.dateIni">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==6 || data.mode==7">
+        <mat-label>Data final</mat-label>
+        <input matInput [matDatepicker]="picker2" (dateChange)="onDateEndChange($event)" [(ngModel)]="data.dateEnd">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
 
-  </mat-form-field>
-  <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==6 || data.mode==7">
-    <mat-label>Data</mat-label>
-    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [(ngModel)]="data.date">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+  <mat-form-field class="example-full-width" style="width: 100%">
+    <mat-label>Descripció</mat-label>
+    <textarea matInput [(ngModel)]="data.description" placeholder="Descripció del que es farà a la tasca..."></textarea>
   </mat-form-field>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="cancelar()">Cancelar</button>
+<div class="actions" mat-dialog-actions>
+  <button mat-button color="warn" (click)="cancelar()">Cancelar</button>
   <button mat-button  [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
 </div>

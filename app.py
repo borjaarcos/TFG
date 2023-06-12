@@ -52,28 +52,30 @@ def get_twCookie():
     password = "beedata23TFG"
     #req = request.get_json()
     response = requests.get(url, auth=(username, password))
-    if response.status_code == 200:
-        print("La solicitud fue exitosa.")
-    else:
-        print("La solicitud falló. Código de estado:", response.status_code)
     #Creating a cookiejar useful when doing a response
     cookiejar = response.cookies
     cookies_dict = cookiejar.get_dict()
     mi_respuesta = make_response(jsonify(cookies_dict))
     mi_respuesta.headers['Access-Control-Allow-Origin'] = '*'
     mi_respuesta.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    mi_respuesta.set_cookie('cookie', value=cookies_dict['tw-auth'])
+    if response.status_code == 200:
+        print("La solicitud fue exitosa.")
+        mi_respuesta.set_cookie('cookie', value=cookies_dict['tw-auth'])
+    else:
+        mi_respuesta.status_code = response.status_code
+        print("La solicitud falló. Código de estado:", response.status_code)
+
     return mi_respuesta
 
 @app.route('/tasklist', methods=['POST'])
 def get_tasklist():
     req = request.get_json()
     url = "https://beedata.teamwork.com/projects/"+req['projectid']+"/tasklists.json"
+
     session = requests.Session()
     my_cookie_jar = requests.cookies.RequestsCookieJar()
     my_cookie_jar.set('tw-auth', req['cookie'])
     session.cookies.update(my_cookie_jar)
-
     responseTasklists = session.get(url)
     if responseTasklists.status_code == 200:
         data = []
@@ -81,14 +83,21 @@ def get_tasklist():
         for tasklist in responseTasklists.json()['tasklists']:
             id = tasklist['id']
             i = 0
-            url = "https://beedata.teamwork.com/tasklists/" + id + "/tasks.json"
-            responseTasks = session.get(url)
+
+            urlProjects = "https://beedata.teamwork.com/tasklists/" + id + "/tasks.json"
+            responseProjects = session.get(urlProjects)
             todo = []
+            for project in responseProjects.json()['todo-items']:
+                if 'parent-task' not in project:
+                    todo.append(project)
+
+            url = "https://beedata.teamwork.com/tasklists/" + id + "/tasks.json?startDate="+req['startDate']+"&endDate" \
+            "="+ req['endDate']
+
+            responseTasks = session.get(url)
+
             for task in responseTasks.json()['todo-items']:
-                if 'parent-task' not in task:
-                    todo.append(task)
-                elif 'content' in task:
-                    subtasks.append(task)
+                subtasks.append(task)
             tasklist['tasks'] = todo
             data.append(tasklist)
             i = i+1
@@ -101,45 +110,56 @@ def get_tasklist():
         return my_response
     else:
         print("La solicitud falló.")
-def dataMaker(mode, name, date, id):
+
+def dataMaker(mode, name, date, description, id, dateEnd, tag):
     if(mode == 1 or mode == 4):
     #Cuidado con el nombre de los atributos, sino no va
         data = {
             "todo-list": {
-                "name": name
+                "name": name,
+                "description": description
             }
         }
     elif(mode == 2):
         data = {
             "todo-item": {
-                "content": name
+                "content": name,
+                "description": description
             }
         }
     elif(mode == 3):
         data = {
             "todo-item": {
                 "content": name,
-                "start-date": date
+                "start-date": date,
+                "description": description,
+                "due-date": dateEnd,
+                "tags": tag
             }
         }
     elif (mode == 5):
         data = {
             "project": {
                 "name": name,
+                "description": description
             }
         }
     elif (mode == 6):
         data = {
             "task": {
                 "content": name,
-                "due-date": date
+                "start-date": date,
+                "description": description,
+                "due-date": dateEnd
             }
         }
     elif (mode == 7):
         data = {
             "todo-item": {
                 "content": name,
-                "due-date": date
+                "start-date": date,
+                "description": description,
+                "tags": tag
             }
         }
     return data
@@ -181,8 +201,9 @@ def editTasklist():
         "Content-Type": "application/json"
     }
     cookies = {'tw-auth': req['cookie']}
-
-    data = dataMaker(req['mode'], req['name'], req['date'], str(req['taskid']))
+    h = req['tag']
+    data = dataMaker(req['mode'], req['name'], req['date'], req['description'], str(req['taskid']), req['dateEnd'],
+                     req['tag'])
 
     url = urlMaker(str(req['taskid']), req['mode'])
 
@@ -199,6 +220,34 @@ def editTasklist():
         print('Error al editar tasklist:', response.content)
         return "error"
 
+
+@app.route('/tags', methods=['POST'])
+def getTags():
+    req = request.get_json()
+    session = requests.Session()
+    headers = {
+        "Content-Type": "application/json"
+    }
+    cookies = {'tw-auth': req['cookie']}
+
+    url = "https://beedata.teamwork.com/tags.json"
+
+
+    response = session.get(url, headers=headers, cookies=cookies)
+
+    # Comprobar que la petición ha sido exitosa (código 200)
+    if response.status_code == 200:
+
+        print('Tags recogidos correctamente.')
+        res = {}
+        res['tags'] = response.json()['tags']
+        my_response = make_response(jsonify(res))
+        my_response.headers['Access-Control-Allow-Origin'] = '*'
+        my_response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return my_response
+    else:
+        print('Error al recoger tags:', response.content)
+        return "error"
 
 
 if __name__ == '__main__':

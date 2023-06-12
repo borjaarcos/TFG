@@ -6,42 +6,56 @@
   margin: 0.5% 0% 0% 0.5%;
   color:white;
   font-family: 'Righteous', cursive;
-  background-color: #0A0043;
+  background-color: #08002a !important;
   border: none;
+}
+.projectTitle2{
+  font-size: x-large;
+  margin: 0.5% 0% 0% 0.5%;
+  color:white;
+  font-family: 'Righteous', cursive;
+ background-color: #08002a !important;
+  border: none;
+  margin-left: 75%;
 }
 .titleContainer{
   display: flex;
+
 }
 .yearContainer{
   display: flex;
-  margin-left: 55em;
+  align-self: flex-start;
   margin-top: 0.7em;
 }
 .ganttHeadContainer{
   display: flex;
+
 }
 .botonDrawer{
   margin: 1% 0% 0% 5%;
 }
 .ganttContainer{
   background-color: #FFFFFF;
-  min-height: 40rem;
-  max-height: 300em;
+  min-height: 43.5rem;
+  max-height: 50em;
   margin: 0% 0% 0% 0%;
   border-radius: 5px;
   width: 100%;
    display: flex;
   justify-content: center;
 }
-
+input[type="checkbox"]{
+  margin-right: 1em;
+}
+mat-divider{
+  margin: 0.5em;
+}
 
 
 
 
 .custom-table {
   width: 100%;
-
-  border: 1px solid black;
 }
 .custom-table th:first-child,
 .custom-table td:first-child {
@@ -51,18 +65,27 @@
 .custom-table th,
 .custom-table td {
   padding: 0!important;
-  border: solid black 1px;
 }
 .custom-table th:not(:first-child),
 .custom-table td:not(:first-child) {
   width: calc((100% - 5%) /  7);
+  border-right: 0.2px solid #c0bfbf;
+  border-bottom: 0.2px solid #c0bfbf;
 }
-.tarea{
-  display: flex;
-  flex-wrap: wrap;
+.tarea {
+  text-align: center;
+  display: inline-block;
+  margin-right: 5px;
+  font-family: 'Arimo', sans-serif;
+  cursor: pointer;
 }
 
 
+.fixedSize{
+  word-wrap: break-word;
+  width: 60px;
+  margin-right: 20px;
+}
 
 mat-raised-button{
   padding-top: 10%;
@@ -78,18 +101,16 @@ mat-drawer {
 }
 
 mat-drawer-content {
-  background-color:#0A0043 !important;
+ background-color: #08002a !important;
 }
 input[type="checkbox"]{
- transform: scale(1.5);
+  transform: scale(1.5);
   margin-left: 0.5em;
 }
 .head{
-  display: flex;
+  text-align: center;
   font-size: large;
   font-family: 'Righteous', cursive;
-  justify-content: space-between;
-
 }
 .column{
   display: flex;
@@ -102,14 +123,6 @@ input[type="checkbox"]{
   border-left: 0.5px solid rgba(156, 139, 156, 0.5);
   flex-direction: column;
   align-items: center;
-}
-mat-divider{
-  margin-bottom: 5%;
-}
-.subtasks{
-  align-self: flex-start;
-  padding: 0;
-  font-family: 'Arimo', sans-serif;
 }
 
 .struct{
@@ -125,6 +138,19 @@ mat-divider{
 
 
 
+.node{
+  display: flex;
+}
+.node span{
+  margin-top: 15px;
+}
+.node .flatButton{
+  margin-top: 5px;
+}
 
-
-
+.pred{
+  margin-left: 3em;
+  margin-top:0.5em;
+  display: flex;
+  justify-content: space-between;
+}

@@ -19,13 +19,14 @@ import {TasklistGanttComponent} from './components/tasklist-gantt/tasklist-gantt
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
-import {DateAdapter, MAT_DATE_FORMATS, MatOptionModule} from "@angular/material/core";
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import { EditTasksDialogComponent } from './components/edit-tasks-dialog/edit-tasks-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatMenuModule} from "@angular/material/menu";
-import { CodidgoArrastrarComponent } from './components/codidgo-arrastrar/codidgo-arrastrar.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -33,34 +34,36 @@ import { CodidgoArrastrarComponent } from './components/codidgo-arrastrar/codidg
     LoginComponent,
     ProjectsComponent,
     TasklistGanttComponent,
-    EditTasksDialogComponent,
-    CodidgoArrastrarComponent
+    EditTasksDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatDialogModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatSliderModule,
-        MatFormFieldModule,
-        MatCardModule,
-        MatInputModule,
-        HttpClientModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatToolbarModule,
-        MatListModule,
-        MatOptionModule,
-        MatSelectModule,
-        MatDatepickerModule,
-        MatMomentDateModule,
-        MatMenuModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    MatCardModule,
+    MatInputModule,
+    HttpClientModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatExpansionModule
+  ],
   providers: [{provide: DateAdapter, useClass: MomentDateAdapter},
-  { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }],
+  { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  { provide: MAT_DATE_LOCALE, useValue: 'en-GB' } ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

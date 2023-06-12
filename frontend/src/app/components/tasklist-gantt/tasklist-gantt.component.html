@@ -1,63 +1,117 @@
 <mat-drawer-container id="appear" class="example-container" hasBackdrop="true">
     <mat-drawer #drawer mode="over">
-      <div
-    *ngFor="let tasklist of tasklists">
-      <mat-divider></mat-divider>
-      <input type="checkbox" [(ngModel)]="taskVisible[tasklist.name]">
-        <button mat-raised-button (click)="abrirDialogo(tasklist.id,1, 'Editar '+tasklist.name, tasklist.name)" >
-          {{tasklist.name}}
-        </button>
-        <button   mat-icon-button color="basic" (click)="abrirDialogo(tasklist.id,6, 'Afegir tasca a  '+tasklist.name, tasklist.name)"  aria-label="add task to tasklist">
-         <mat-icon >add_circle</mat-icon>
-        </button>
-      <div
-      *ngFor="let task of tasklist.tasks" style="margin-left: 1em">
-        <input type="checkbox" [(ngModel)]="taskVisible[task.content]">
-          <button mat-raised-button (click)="abrirDialogo(task.id,2,'Editar '+task.content, task.content)" >
-            {{task.content}}
-          </button>
-        <button mat-icon-button color="primary" (click)="abrirDialogo(task.id,7, 'Afegir subtasca a  '+tasklist.name, '')" aria-label="add task to tasklist">
-         <mat-icon>add_circle</mat-icon>
-        </button>
-        <div
-          *ngFor="let pred of task.predecessors" style="margin: 2em">
-          <button mat-raised-button (click)="abrirDialogo(pred.id,3, 'Editar '+pred.name, pred.name)" >
-            {{pred.name}}
-          </button>
-          <input type="checkbox" [(ngModel)]="taskVisible[pred.name]">
-        </div>
-      </div>
 
-    </div>
+      <!--Tasklist container -->
+      <ng-container
+      *ngFor="let tasklist of tasklists">
+
+        <div class="node">
+          <input type="checkbox" [(ngModel)]="taskVisible[tasklist.name]">
+          <span>{{tasklist.name}}</span>
+          <button  mat-icon-button matTooltip="More Options" [matMenuTriggerFor]="optionsMenu" class="hover-display"
+              #menuTrigger="matMenuTrigger" >
+              <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false">
+          <button mat-menu-item (click)="openDialog(tasklist.id,1, 'Editar '+tasklist.name, tasklist.name, tasklist.description, '', '', '')">
+            Editar
+          </button>
+          <button mat-menu-item (click)="openDialog(tasklist.id,6, 'Afegir projecte  '+tasklist.name, tasklist.name, tasklist.description, '', '', '')">
+            Afegir projecte
+          </button>
+        </mat-menu>
+        </div>
+
+
+        <!--Project container -->
+        <ng-container *ngIf="taskVisible[tasklist.name]">
+          <div class="node"
+          *ngFor="let task of tasklist.tasks" style="margin-left: 1em">
+            <div class="node">
+              <input type="checkbox" [(ngModel)]="taskVisible[task.content]" style="accent-color:#2C97FB">
+              <mat-accordion style="width: 300px">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                          <div class="node">
+                            <p class="flatButton"> {{task.content}}</p>
+                          </div>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+
+              <!--Task container -->
+              <ng-container *ngIf="taskVisible[task.content] ">
+                <div
+                  *ngFor="let pred of task.predecessors" class="pred">
+                    {{pred.name}}
+                  <input style="justify-content: space-between" type="checkbox" [(ngModel)]="taskVisible[pred.name]">
+                </div>
+              </ng-container>
+
+             </mat-expansion-panel>
+            </mat-accordion>
+           </div>
+            <button  mat-icon-button matTooltip="More Options" [matMenuTriggerFor]="optionsMenu" class="hover-display"
+                #menuTrigger="matMenuTrigger" >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false">
+              <button mat-menu-item (click)="openDialog(task.id,2,'Editar projecte '+task.content, task.content, task.description, '', '', '')">
+                Editar
+              </button>
+              <button mat-menu-item (click)="openDialog(task.id,7, 'Afegir tasca a  '+tasklist.name, '', task.description, today,today,task['tag'])">
+                Afegir tasca
+              </button>
+            </mat-menu>
+          </div>
+        </ng-container>
+
+        <mat-divider></mat-divider>
+      </ng-container>
     </mat-drawer>
+
+
+
+  <!--Header -->
     <mat-drawer-content>
       <div class="nav">
         <div class="title" [routerLink]="['/']">teamwork <p style="color:#ff22b1;">.</p> Gantt</div>
         <div class="user"><div class="user"><mat-icon> person_pin</mat-icon><p>user</p></div><button (click)="logout()" class="logout">Logout</button></div>
-
       </div>
 
 
 
+      <!--Gantt header -->
       <div class="ganttHeadContainer">
         <button class="botonDrawer" mat-raised-button (click)="drawer.toggle()"><mat-icon>filter_list</mat-icon></button>
         <div  class="projectTitle">
           <div class="titleContainer">
-          <button class="projectTitle" [matMenuTriggerFor]="menu">
-            {{tasklists[0].projectName}}
-          </button>
-          <p class="yearContainer"><mat-icon>calendar_today</mat-icon>  {{currentYear}}</p>
+            <button class="projectTitle" [matMenuTriggerFor]="menu">
+              <ng-container *ngIf="tasklists">
+              {{tasklists[0]?.projectName}}
+              </ng-container>
+            </button>
           </div>
+          <div (click)="changeMode(1)" *ngIf="calendarMode==0">Setmanal</div>
+            <div (click)="changeMode(0)" *ngIf="calendarMode==1">Mensual</div>
           <mat-menu #menu="matMenu">
-            <button (click)="abrirDialogo(tasklists[0].projectId,4, 'Crear llista de tasques', '')" mat-menu-item>
+            <button (click)="openDialog(tasklists[0].projectId,4, 'Crear llista de tasques', '', '', '', '','')" mat-menu-item>
               Crear llista de tasques
             </button>
-            <button (click)="abrirDialogo(tasklists[0].projectId,5, 'Editar '+ tasklists[0].projectName,tasklists[0].projectName)" mat-menu-item>
+            <button (click)="openDialog(tasklists[0].projectId,5, 'Editar '+ tasklists[0].projectName,tasklists[0].projectName, '', '','', '')" mat-menu-item>
               Editar projecte
             </button>
           </mat-menu>
         </div>
+        <div class="projectTitle2">
+          <p class="yearContainer"><mat-icon>calendar_today</mat-icon>{{currentYear}}</p>
+        </div>
       </div>
+
+
+
+      <!--Gantt container -->
       <div class="struct">
         <button class ="minifab" mat-mini-fab color="primary"  (click)="changeDate(-1)">
           <mat-icon>keyboard_arrow_left</mat-icon>
@@ -80,28 +134,44 @@
 
           </div>
           -->
+          <ng-container *ngIf="weekCalendar">
           <table class="custom-table">
-  <thead>
-    <tr *ngIf="reloadList">
-      <th></th> <!-- Celda vacía en la esquina superior izquierda -->
-      <th *ngFor="let week of weekCalendar['weekPlan']" >{{week.week}}</th>
+            <thead>
+              <tr *ngIf="reloadList">
+                <th></th> <!-- Celda vacía en la esquina superior izquierda -->
+                <th *ngFor="let week of weekCalendar['weekPlan']" class="head">{{week?.week}}</th>
 
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="clients" *ngFor="let tasklist of weekCalendar['clients']">
-        <th>{{tasklist}}</th>
-        <td *ngFor="let week of weekCalendar['weekPlan']">
-          <div *ngFor="let task of week['tasks']">
-          <p *ngIf="task['todo-list-name'] == tasklist">{{task.content}}</p>
-            </div>
-        </td>
-    </tr>
-<ng-template #emptyState>
-  Valor vacío
-</ng-template>
-  </tbody>
-</table>
+              </tr>
+            </thead>
+
+              <ng-container *ngFor="let tasklist of weekCalendar['clients']">
+                <ng-container *ngIf="taskVisible[tasklist]">
+                  <tr>
+                    <th ><p class="fixedSize">{{tasklist}}</p></th>
+                    <td [style.height.%]="clients" *ngFor="let week of weekCalendar['weekPlan']" (dragover)="allowDrop($event)" (drop)="dropTask($event, week['week'])">
+                      <ng-container *ngFor="let task of week['tasks']" >
+                        <ng-container *ngIf="taskVisible[task.content]">
+                          <ng-container *ngIf="taskVisible[task['parent-task'].content]">
+                            <p  [ngStyle]="{'color': task.tags? task?.tags[0]['color']: 'black'}"
+                                (dblclick)="openDialog(task.id,3, 'Editar '+task.content, task.content,
+                                 task.description, task['start-date'], task['due-date'], task['tags']?.[0]?.name || '')"
+                               *ngIf="task['todo-list-name'] == tasklist"
+                               class="tarea" draggable="true"
+                               (dragstart)="dragTask($event, task, week['week']) "
+                                matTooltip="Progrés: {{task.progress}}%">
+                                {{task.content}}
+                            </p>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+
+          </table>
+          </ng-container>
         </div>
         <button mat-mini-fab class ="minifab" color="primary" (click)="changeDate(1)">
           <mat-icon>keyboard_arrow_right</mat-icon>
