@@ -113,11 +113,13 @@ export class TasklistGanttComponent {
     });
 
     taskEditionDialog.afterClosed().subscribe((result) => {
-      if (result === 'ok') {
+      console.log(result)
+      if (result != undefined) {
         // Acciones a realizar si se hizo clic en "OK"
-
+console.log("h")
         if (result.tag == undefined) {
           result.tag = ""
+
         }
         this.updateTask(id, result.name, mode, result.dateIni, result.description, result.dateEnd, result.tag);
       }
