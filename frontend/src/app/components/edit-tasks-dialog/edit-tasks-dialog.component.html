@@ -5,7 +5,7 @@
       <mat-label>Nom</mat-label>
       <input matInput [(ngModel)]="data.name">
     </mat-form-field>
-   <mat-form-field style="width: 49%" *ngIf="data.mode==3 || data.mode==6 || data.mode==7">
+   <mat-form-field style="width: 49%" *ngIf="data.mode==3 || data.mode==7">
       <mat-label>Tag</mat-label>
       <mat-select name="tag" [(ngModel)]="data.tag">
         <ng-container *ngIf="tags">
@@ -16,13 +16,13 @@
       </mat-select>
     </mat-form-field>
     <div>
-      <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==6 || data.mode==7" style="margin-right: 5px">
+      <mat-form-field appearance="fill" *ngIf="data.mode==3  || data.mode==7" style="margin-right: 5px">
         <mat-label>Data inici</mat-label>
         <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [(ngModel)]="data.dateIni">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==6 || data.mode==7">
+      <mat-form-field appearance="fill" *ngIf="data.mode==3 || data.mode==7">
         <mat-label>Data final</mat-label>
         <input matInput [matDatepicker]="picker2" (dateChange)="onDateEndChange($event)" [(ngModel)]="data.dateEnd">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>

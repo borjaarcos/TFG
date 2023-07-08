@@ -158,6 +158,7 @@ def dataMaker(mode, name, date, description, id, dateEnd, tag):
             "todo-item": {
                 "content": name,
                 "start-date": date,
+                "due-date": dateEnd,
                 "description": description,
                 "tags": tag
             }
