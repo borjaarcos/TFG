@@ -151,7 +151,7 @@
                     <td [style.height.%]="clients" *ngFor="let week of weekCalendar['weekPlan']" (dragover)="allowDrop($event)" (drop)="dropTask($event, week['week'])">
                       <ng-container *ngFor="let task of week['tasks']" >
                         <ng-container *ngIf="taskVisible[task.content]">
-                          <ng-container *ngIf="taskVisible[task['parent-task'].content]">
+                          <ng-container *ngIf="taskVisible[task['todo-list-name']]">
                             <p  [ngStyle]="{'color': task.tags? task?.tags[0]['color']: 'black'}"
                                 (dblclick)="openDialog(task.id,3, 'Editar '+task.content, task.content,
                                  task.description, task['start-date'], task['due-date'], task['tags']?.[0]?.name || '')"
