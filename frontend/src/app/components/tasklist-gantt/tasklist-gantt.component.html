@@ -41,13 +41,13 @@
 
 
               <!--Task container -->
-              <ng-container *ngIf="taskVisible[task.content] ">
+
                 <div
                   *ngFor="let pred of task.predecessors" class="pred">
                     {{pred.name}}
                   <input style="justify-content: space-between" type="checkbox" [(ngModel)]="taskVisible[pred.name]">
                 </div>
-              </ng-container>
+
 
              </mat-expansion-panel>
             </mat-accordion>
